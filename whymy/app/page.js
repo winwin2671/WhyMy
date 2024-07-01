@@ -8,7 +8,6 @@ export default function Home() {
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState('')
   const [threadId, setThreadId] = useState(null) // State to store thread ID
-  const [lastMessageId, setLastMessageId] = useState(null) // State to store last message ID
   const [seenMessageIds, setSeenMessageIds] = useState(new Set()) // State to track seen message IDs
 
   useEffect(() => {
