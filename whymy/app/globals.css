@@ -23,17 +23,17 @@ body {
 
 h1 {
   color: #bebfc0;
-  padding-left: 35vh;
+  padding-left: 10%;
   padding-top: 24px;
-  font-size: 35px;
+  font-size: 2em;
 }
 
-.sidebar {
+/* .sidebar {
   height: 100%;
   width: 256px;
   background-color: #1f1f1f;
   position: fixed;
-}
+} */
 
 .chat {
   position: absolute;
@@ -74,9 +74,22 @@ h1 {
   word-wrap: break-word;
 }
 
+.messageForm {
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  bottom: 0;
+  background-color: #2c2e30;
+  height: 90px;
+  width: 100%;
+  padding: 0 20px;
+  z-index: 10;
+}
+
 Textarea {
   width: 837px;
-  height: 67px;
+  height: auto;
   border: none;
   border-radius: 100px;
   padding: 5px 20px;
@@ -85,6 +98,8 @@ Textarea {
   resize: none;
   font-size: 17px;
   margin-bottom: 20px;
+  align-content: center;
+  margin-right: 20px;
 }
 
 Textarea::placeholder {
@@ -93,12 +108,14 @@ Textarea::placeholder {
 }
 
 button {
-  height: 60px;
-  width: 60px;
+  height: 66px;
+  width: 66px;
   border-radius: 50%;
   border: none;
   cursor: pointer;
-  background-color: #65686a;
+  background-color: #46494d;
+  margin-bottom: 20px;
+  color: #bebfc0;
 }
 
 .messageForm {
@@ -109,12 +126,54 @@ button {
   bottom: 0;
   background-color: #2c2e30;
   height: 90px;
-  width: calc(100% - 256px);
-  margin-left: 256px;
-  padding: 0 20px;
+  width: 100%;
+  z-index: 10;
 }
 
 .message {
   margin-bottom: 10px;
   color: #bebfc0;
+}
+
+@media (max-width: 969px) {
+  textarea {
+    width: 750px;
+  }
+}
+
+@media (max-width: 886px) {
+  textarea {
+    width: 650px;
+  }
+
+  @media (max-width: 786px) {
+    textarea {
+      width: 550px;
+    }
+  }
+
+  @media (max-width: 689px) {
+    textarea {
+      width: 450px;
+    }
+  }
+
+  @media (max-width: 583px) {
+    textarea {
+      width: 350px;
+    }
+  }
+
+  @media (max-width: 474px) {
+    textarea {
+      width: 250px;
+    }
+  }
+
+  /* foldable */
+  @media (max-width: 344px) {
+    textarea {
+      width: 200px;
+    }
+  }
 }

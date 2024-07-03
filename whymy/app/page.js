@@ -2,31 +2,31 @@
 
 import { useState, useEffect } from 'react'
 import { Textarea } from '@nextui-org/input'
-import OpenAI from 'openai'
 
 export default function Home() {
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState('')
-  const [threadId, setThreadId] = useState(null) // State to store thread ID
-  const [seenMessageIds, setSeenMessageIds] = useState(new Set()) // State to track seen message IDs
+  const [threadId, setThreadId] = useState(null)
+  const [seenMessageIds, setSeenMessageIds] = useState(new Set())
 
   useEffect(() => {
-    // Initialize a new thread when component mounts
     initializeThread()
   }, [])
 
   const initializeThread = async () => {
     try {
-      const openai = new OpenAI({
-        apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
-        dangerouslyAllowBrowser: true,
+      const response = await fetch('/api/openai/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({}),
       })
 
-      const thread = await openai.beta.threads.create()
-      setThreadId(thread.id) // Store the thread ID
+      const data = await response.json()
+      setThreadId(data.threadId)
     } catch (error) {
       console.error('Error initializing thread:', error)
-      // Handle error
     }
   }
 
@@ -34,22 +34,29 @@ export default function Home() {
     e.preventDefault()
 
     try {
-      const openai = new OpenAI({
-        apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
-        dangerouslyAllowBrowser: true,
-      })
-
-      // Ensure threadId exists before making API calls
       if (!threadId) {
         console.error('Thread ID is not initialized.')
         return
       }
 
-      const assistant = await openai.beta.assistants.retrieve(
-        'asst_8gevepD9heOgP8wxYGiGl9rh',
-      )
+      const response = await fetch('/api/openai', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          prompt: input,
+          threadId: threadId,
+          role: 'user',
+        }),
+      })
 
-      console.log('User:', input)
+      const data = await response.json()
+
+      if (data.error) {
+        console.error('Error:', data.error)
+        return
+      }
 
       const userMessage = {
         role: 'user',
@@ -58,50 +65,27 @@ export default function Home() {
 
       setMessages((prevMessages) => [...prevMessages, userMessage])
 
-      await openai.beta.threads.messages.create(threadId, userMessage)
+      const newAssistantMessages = data.messages.filter(
+        (msg) => !seenMessageIds.has(msg.id),
+      )
 
-      const run = await openai.beta.threads.runs.createAndPoll(threadId, {
-        assistant_id: assistant.id,
+      setSeenMessageIds((prevIds) => {
+        const newIds = new Set(prevIds)
+        newAssistantMessages.forEach((msg) => newIds.add(msg.id))
+        return newIds
       })
 
-      if (run.status === 'completed') {
-        const responseMessages = await openai.beta.threads.messages.list(
-          threadId,
-        )
-
-        // Find all assistant messages in the response that have not been seen
-        const newAssistantMessages = responseMessages.data.filter(
-          (msg) => msg.role === 'assistant' && !seenMessageIds.has(msg.id),
-        )
-
-        // Extract text content from each assistant message
-        const assistantResponses = newAssistantMessages.map((msg) => {
-          console.log('WhyMy:', msg.content[0].text.value)
-          return msg.content[0].text.value
-        })
-
-        setSeenMessageIds((prevIds) => {
-          const newIds = new Set(prevIds)
-          newAssistantMessages.forEach((msg) => newIds.add(msg.id))
-          return newIds
-        })
-
-        // Update messages state with assistant responses
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          ...assistantResponses.map((content) => ({
-            role: 'assistant',
-            content,
-          })),
-        ])
-      } else {
-        console.error('Error:', run.status)
-      }
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        ...newAssistantMessages.map((msg) => ({
+          role: 'assistant',
+          content: msg.content,
+        })),
+      ])
 
       setInput('')
     } catch (error) {
       console.error('Error:', error)
-      // Handle error state here
     }
   }
 
@@ -126,9 +110,9 @@ export default function Home() {
         />
         <button type="submit">Send</button>
       </form>
-      <div className="sidebar">
-        {/* <button className='addchat'></button> */}
-      </div>
+      {/* <div className="sidebar"> */}
+      {/* <button className='addchat'></button> */}
+      {/* </div> */}
     </div>
   )
 }
