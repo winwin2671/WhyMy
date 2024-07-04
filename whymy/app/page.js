@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { Textarea } from '@nextui-org/input'
+import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 
 export default function Home() {
@@ -117,6 +118,7 @@ export default function Home() {
       {/* <div className="sidebar"> */}
       {/* <button className='addchat'></button> */}
       {/* </div> */}
+      <Analytics />
       <SpeedInsights />
     </div>
   )
