@@ -89,7 +89,13 @@ export default function Home() {
   return (
     <div>
       <div className="topnav">
-        <h1>WhyMy</h1>
+        <h1 className="main-title">
+          WhyMy
+          <span className="sub-title">beta</span>
+        </h1>
+        <a href="mailto:teeraasasav@gmail.com" target="_blank">
+          Feedback
+        </a>
       </div>
       <div className="chat">
         {messages.map((msg, index) => (

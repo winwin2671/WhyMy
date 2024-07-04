@@ -12,20 +12,37 @@ body {
 }
 
 .topnav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   position: fixed;
   background-color: #2c2e30;
-  border-bottom: solid;
-  border-color: #1f1f1f;
-  border-width: 2px;
+  border-bottom: solid 2px #1f1f1f;
   height: 90px;
   width: 100%;
+  padding: 0 10%;
+  box-sizing: border-box;
 }
 
 h1 {
   color: #bebfc0;
-  padding-left: 10%;
-  padding-top: 24px;
-  font-size: 2em;
+  margin: 0;
+}
+
+.main-title {
+  font-size: 2rem;
+}
+
+.sub-title {
+  font-size: 16px;
+}
+
+a {
+  color: #bebfc0;
+  font-size: 1.5em;
+  float: right;
+  text-decoration: none;
+  font-weight: bold;
 }
 
 /* .sidebar {
@@ -61,6 +78,7 @@ h1 {
   color: white;
   align-self: flex-end;
   word-wrap: break-word;
+  white-space: pre-wrap;
 }
 
 .assistant {
@@ -72,6 +90,7 @@ h1 {
   color: #bebfc0;
   align-self: flex-start;
   word-wrap: break-word;
+  white-space: pre-wrap;
 }
 
 .messageForm {
@@ -172,6 +191,17 @@ button {
 
   /* foldable */
   @media (max-width: 344px) {
+    .main-title {
+      font-size: 1.5rem;
+    }
+
+    .sub-title {
+      font-size: 8px;
+    }
+
+    a {
+      font-size: 1em;
+    }
     textarea {
       width: 200px;
     }
