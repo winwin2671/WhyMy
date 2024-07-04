@@ -13,6 +13,7 @@
     "@nextui-org/react": "^2.4.2",
     "@nextui-org/system": "^2.2.2",
     "@nextui-org/theme": "^2.2.6",
+    "@vercel/speed-insights": "^1.0.12",
     "axios": "^1.7.2",
     "dotenv": "^16.4.5",
     "framer-motion": "^11.2.12",
