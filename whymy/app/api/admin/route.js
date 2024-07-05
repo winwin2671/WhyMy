@@ -1,9 +1,7 @@
 import { NextResponse } from 'next/server'
 import { OpenAI } from 'openai'
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-})
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 
 async function handleThreadInteraction(threadId, prompt, role) {
   if (!threadId) {
@@ -15,11 +13,7 @@ async function handleThreadInteraction(threadId, prompt, role) {
     'asst_8gevepD9heOgP8wxYGiGl9rh',
   )
 
-  const userMessage = {
-    role: role || 'user',
-    content: prompt,
-  }
-
+  const userMessage = { role: role || 'user', content: prompt }
   await openai.beta.threads.messages.create(threadId, userMessage)
 
   try {
@@ -63,17 +57,11 @@ async function handleThreadInteraction(threadId, prompt, role) {
 }
 
 export async function GET() {
-  return NextResponse.json(
-    { error: 'Method not allowed' },
-    {
-      status: 405,
-    },
-  )
+  return NextResponse.json({ error: 'Method not allowed' }, { status: 405 })
 }
 
 export async function POST(request) {
   console.log('Route handler hit')
-
   try {
     const { prompt, threadId, role } = await request.json()
     const { messages, threadId: newThreadId } = await handleThreadInteraction(
@@ -81,20 +69,12 @@ export async function POST(request) {
       prompt,
       role,
     )
-
     return NextResponse.json(
       { messages, threadId: newThreadId },
-      {
-        status: 200,
-      },
+      { status: 200 },
     )
   } catch (error) {
     console.error(error)
-    return NextResponse.json(
-      { error: error.message },
-      {
-        status: 500,
-      },
-    )
+    return NextResponse.json({ error: error.message }, { status: 500 })
   }
 }
