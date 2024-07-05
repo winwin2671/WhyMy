@@ -13,30 +13,29 @@ export default function Home() {
   useEffect(() => {
     const createThread = async () => {
       try {
-        if (!threadId) {
-          const response = await fetch('/api/admin', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ prompt: 'initializing thread' }),
-          })
-          const data = await response.json()
-          console.log('Thread initialization response:', data)
-          setThreadId(data.threadId)
-          const initialMessages = data.messages.map((msg) => ({
-            id: msg.id,
-            role: 'assistant',
-            content: msg.content,
-          }))
-          setMessages(initialMessages)
-          setSeenMessageIds(new Set(initialMessages.map((msg) => msg.id)))
-        }
+        const response = await fetch('/api/admin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt: 'initializing thread' }),
+        })
+        const data = await response.json()
+        console.log('Thread initialization response:', data)
+        setThreadId(data.threadId)
+        const initialMessages = data.messages.map((msg) => ({
+          id: msg.id,
+          role: 'assistant',
+          content: msg.content,
+        }))
+        setMessages(initialMessages)
+        setSeenMessageIds(new Set(initialMessages.map((msg) => msg.id)))
       } catch (error) {
         console.error('Error initializing thread:', error)
       }
     }
-    createThread()
+
+    if (!threadId) {
+      createThread()
+    }
   }, [threadId])
 
   const handleSubmit = async (e) => {
@@ -49,30 +48,23 @@ export default function Home() {
 
       const response = await fetch('/api/admin', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt: input, threadId, role: 'user' }),
       })
-
       const data = await response.json()
       console.log('Message response:', data)
-
       if (data.error) {
         console.error('Error:', data.error)
         return
       }
-
       const newAssistantMessages = data.messages.filter(
         (msg) => !seenMessageIds.has(msg.id),
       )
-
       setSeenMessageIds((prevIds) => {
         const newIds = new Set(prevIds)
         newAssistantMessages.forEach((msg) => newIds.add(msg.id))
         return newIds
       })
-
       setMessages((prevMessages) => [
         ...prevMessages,
         { role: 'user', content: input },
@@ -81,7 +73,6 @@ export default function Home() {
           content: msg.content,
         })),
       ])
-
       setInput('')
     } catch (error) {
       console.error('Error sending message:', error)
