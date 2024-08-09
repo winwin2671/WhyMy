@@ -188,6 +188,11 @@ button {
       width: 250px;
     }
   }
+  @media (max-width: 380px) {
+    textarea {
+      width: 200px;
+    }
+  }
 
   /* foldable */
   @media (max-width: 344px) {

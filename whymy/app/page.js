@@ -9,6 +9,7 @@ export default function Home() {
   const [input, setInput] = useState('')
   const [threadId, setThreadId] = useState('')
   const [seenMessageIds, setSeenMessageIds] = useState(new Set())
+  const [buttonText, setButtonText] = useState('Send')
 
   useEffect(() => {
     const createThread = async () => {
@@ -40,6 +41,13 @@ export default function Home() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+
+    setButtonText('Loading...')
+
+    setTimeout(() => {
+      setButtonText('Send')
+    }, 8000) //set it to the time that it takes to gen a response
+
     try {
       if (!threadId) {
         console.error('Thread ID is not initialized.')
@@ -104,7 +112,7 @@ export default function Home() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
         />
-        <button type="submit">Send</button>
+        <button type="submit">{buttonText}</button>
       </form>
       {/* <div className="sidebar"> */}
       {/* <button className='addchat'></button> */}
